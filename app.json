@@ -1,0 +1,86 @@
+{
+  "expo": {
+    "name": "Trip Planner",
+    "slug": "trip-planner-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "statusBar": {
+      "hidden": false,
+      "style": "auto",
+      "backgroundColor": "transparent",
+      "translucent": true
+    },
+    "androidStatusBar": {
+      "barStyle": "light-content",
+      "backgroundColor": "transparent",
+      "translucent": true
+    },
+    "androidNavigationBar": {
+      "visible": "immersive",
+      "barStyle": "light-content",
+      "backgroundColor": "transparent"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.alfonsomulet.tripplanner",
+      "supportsTablet": true,
+      "statusBarHidden": false,
+      "statusBarStyle": "auto",
+      "config": {
+        "googleMapsApiKey": "AIzaSyDgpPXqecqrcuikozBRy4AYwFGpN1a32w0"
+      }
+    },
+    "android": {
+      "package": "com.alfonsomulet.tripplanner",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDgpPXqecqrcuikozBRy4AYwFGpN1a32w0"
+        }
+      },
+      "navigationBar": {
+        "visible": "immersive",
+        "barStyle": "light-content",
+        "backgroundColor": "transparent"
+      },
+      "statusBar": {
+        "barStyle": "light-content",
+        "backgroundColor": "transparent",
+        "translucent": true
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-asset",
+      "expo-font"
+    ],
+    "updates": {
+      "enabled": false,
+      "checkAutomatically": "NEVER",
+      "fallbackToCacheTimeout": 0
+    },
+    "scheme": "tripplanner",
+    "extra": {
+      "deepLinkingEnabled": true,
+      "eas": {
+        "projectId": "48e3be47-ab4b-4507-aa5c-08fc7652dc65"
+      }
+    }
+  }
+}
