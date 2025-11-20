@@ -17,6 +17,12 @@
             color: #1e293b;
             line-height: 1.6;
             padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #0f172a;
+            color: #f1f5f9;
         }
 
         .container {
@@ -28,6 +34,29 @@
             padding: 40px 0 30px;
             border-bottom: 1px solid #e2e8f0;
             margin-bottom: 40px;
+            position: relative;
+        }
+
+        body.dark-mode header {
+            border-bottom-color: #334155;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: #3b82f6;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            background: #2563eb;
         }
 
         h1 {
@@ -41,6 +70,10 @@
             color: #64748b;
         }
 
+        body.dark-mode .subtitle {
+            color: #94a3b8;
+        }
+
         .section {
             margin: 40px 0;
         }
@@ -52,12 +85,21 @@
             color: #1e293b;
         }
 
+        body.dark-mode h2 {
+            color: #f1f5f9;
+        }
+
         .faq-item {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 12px;
+        }
+
+        body.dark-mode .faq-item {
+            background: #1e293b;
+            border-color: #334155;
         }
 
         .faq-question {
@@ -69,6 +111,10 @@
         .faq-answer {
             color: #64748b;
             font-size: 15px;
+        }
+
+        body.dark-mode .faq-answer {
+            color: #94a3b8;
         }
 
         .faq-answer ul,
@@ -119,6 +165,11 @@
             margin-top: 40px;
         }
 
+        body.dark-mode footer {
+            color: #94a3b8;
+            border-top-color: #334155;
+        }
+
         @media (max-width: 640px) {
             body {
                 padding: 10px;
@@ -131,12 +182,18 @@
             h2 {
                 font-size: 18px;
             }
+
+            .theme-toggle {
+                position: static;
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
             <h1>TripPlanner Support</h1>
             <p class="subtitle">Help and frequently asked questions</p>
         </header>
@@ -246,7 +303,7 @@
             <div class="faq-item">
                 <div class="faq-question">Can I change the language?</div>
                 <div class="faq-answer">
-                    The app supports multiple languages. Go to Profile → Settings to change your preferred language. Currently supported: English, Spanish, French, German, and more.
+                    We support multiple languages. Go to Profile → Settings to change your preferred language. Currently supported: English, Spanish, French, German, and more.
                 </div>
             </div>
 
@@ -270,7 +327,7 @@
                         <li>Sign out and sign back in</li>
                         <li>Restart the app</li>
                     </ul>
-                    If the problem persists, contact support below.
+                    If the problem persists, contact us below.
                 </div>
             </div>
 
@@ -317,7 +374,7 @@
             <div class="faq-item">
                 <div class="faq-question">Is my data secure?</div>
                 <div class="faq-answer">
-                    TripPlanner uses Firebase Authentication and Firestore with security rules to protect your data. Your trips are private by default and only accessible to you and people you explicitly share with.
+                    We use Firebase Authentication and Firestore with security rules to protect your data. Your trips are private by default and only accessible to you and people you explicitly share with.
                 </div>
             </div>
 
@@ -337,9 +394,9 @@
 
         <section class="contact-section">
             <h2>Need Help?</h2>
-            <p>Can't find what you're looking for? Contact our support team.</p>
+            <p>Can't find what you're looking for? I'm here to help.</p>
             <a href="mailto:support@tripplanner.app" class="contact-email">support@tripplanner.app</a>
-            <p style="margin-top: 20px; font-size: 14px;">We typically respond within 24-48 hours</p>
+            <p style="margin-top: 20px; font-size: 14px;">I typically respond within 24-48 hours</p>
         </section>
 
         <footer>
@@ -348,5 +405,21 @@
             <p style="margin-top: 8px;">© 2025 TripPlanner. All rights reserved.</p>
         </footer>
     </div>
+
+    <script>
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+
+            // Save preference
+            const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+        }
+    </script>
 </body>
 </html>
