@@ -29,7 +29,7 @@
     "ios": {
       "bundleIdentifier": "com.alfonsomulet.tripplanner",
       "buildNumber": "1",
-      "supportsTablet": true,
+      "supportsTablet": false,
       "statusBarHidden": false,
       "statusBarStyle": "auto",
       "config": {
