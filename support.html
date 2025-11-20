@@ -17,7 +17,7 @@
             color: #1e293b;
             line-height: 1.6;
             padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         body.dark-mode {
@@ -35,39 +35,88 @@
             border-bottom: 1px solid #e2e8f0;
             margin-bottom: 40px;
             position: relative;
+            transition: border-color 0.3s ease;
         }
 
         body.dark-mode header {
             border-bottom-color: #334155;
         }
 
-        .theme-toggle {
+        .theme-toggle-wrapper {
             position: absolute;
             top: 40px;
             right: 0;
-            background: #3b82f6;
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .theme-toggle:hover {
-            background: #2563eb;
+        .theme-toggle-label {
+            font-size: 14px;
+            color: #64748b;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .theme-toggle-label {
+            color: #94a3b8;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: 0.3s ease;
+            border-radius: 26px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s ease;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #3b82f6;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
         }
 
         h1 {
             font-size: 28px;
             font-weight: 600;
             margin-bottom: 8px;
+            transition: color 0.3s ease;
         }
 
         .subtitle {
             font-size: 16px;
             color: #64748b;
+            transition: color 0.3s ease;
         }
 
         body.dark-mode .subtitle {
@@ -83,6 +132,7 @@
             font-weight: 600;
             margin-bottom: 20px;
             color: #1e293b;
+            transition: color 0.3s ease;
         }
 
         body.dark-mode h2 {
@@ -95,6 +145,7 @@
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 12px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         body.dark-mode .faq-item {
@@ -106,11 +157,13 @@
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 8px;
+            transition: color 0.3s ease;
         }
 
         .faq-answer {
             color: #64748b;
             font-size: 15px;
+            transition: color 0.3s ease;
         }
 
         body.dark-mode .faq-answer {
@@ -134,6 +187,7 @@
             text-align: center;
             color: white;
             margin: 40px 0;
+            transition: background-color 0.3s ease;
         }
 
         .contact-section h2 {
@@ -150,6 +204,7 @@
             text-decoration: none;
             font-weight: 500;
             margin-top: 12px;
+            transition: background-color 0.3s ease;
         }
 
         .contact-email:hover {
@@ -163,6 +218,7 @@
             font-size: 14px;
             border-top: 1px solid #e2e8f0;
             margin-top: 40px;
+            transition: color 0.3s ease, border-color 0.3s ease;
         }
 
         body.dark-mode footer {
@@ -183,9 +239,10 @@
                 font-size: 18px;
             }
 
-            .theme-toggle {
+            .theme-toggle-wrapper {
                 position: static;
                 margin-bottom: 20px;
+                justify-content: flex-start;
             }
         }
     </style>
@@ -193,7 +250,13 @@
 <body>
     <div class="container">
         <header>
-            <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
+            <div class="theme-toggle-wrapper">
+                <span class="theme-toggle-label">Dark Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
             <h1>TripPlanner Support</h1>
             <p class="subtitle">Help and frequently asked questions</p>
         </header>
@@ -407,19 +470,23 @@
     </div>
 
     <script>
-        // Check for saved theme preference or default to light mode
+        const toggle = document.getElementById('themeToggle');
         const currentTheme = localStorage.getItem('theme') || 'light';
+
         if (currentTheme === 'dark') {
             document.body.classList.add('dark-mode');
+            toggle.checked = true;
         }
 
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-
-            // Save preference
-            const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
-            localStorage.setItem('theme', theme);
-        }
+        toggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
     </script>
 </body>
 </html>
