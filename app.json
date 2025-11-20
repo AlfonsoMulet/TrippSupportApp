@@ -1,5 +1,6 @@
 {
   "expo": {
+    "sdkVersion":"54.0.0",
     "name": "Trip Planner",
     "slug": "trip-planner-app",
     "version": "1.0.0",
@@ -27,11 +28,17 @@
     ],
     "ios": {
       "bundleIdentifier": "com.alfonsomulet.tripplanner",
+      "buildNumber": "1",
       "supportsTablet": true,
       "statusBarHidden": false,
       "statusBarStyle": "auto",
       "config": {
         "googleMapsApiKey": "AIzaSyDgpPXqecqrcuikozBRy4AYwFGpN1a32w0"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSLocationWhenInUseUsageDescription": "This app needs access to your location to help plan trips and show nearby points of interest.",
+        "NSLocationAlwaysUsageDescription": "This app needs access to your location to help plan trips and show nearby points of interest."
       }
     },
     "android": {
