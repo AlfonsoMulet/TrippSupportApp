@@ -1069,21 +1069,6 @@ export default function MapScreen() {
               <View style={styles.tripInfo}>
                 <Text style={styles.tripName}>{currentTrip.name}</Text>
                 <View style={styles.actionButtons}>
-                  <View ref={editButtonRef} collapsable={false}>
-                    <TouchableOpacity
-                      style={[
-                        styles.editButton,
-                        isEditMode && styles.editButtonActive
-                      ]}
-                      onPress={handleEditPress}
-                    >
-                      <Ionicons
-                        name={isEditMode ? "checkmark" : "pencil"}
-                        size={20}
-                        color="white"
-                      />
-                    </TouchableOpacity>
-                  </View>
                   <View ref={transportButtonRef} collapsable={false}>
                     <TouchableOpacity
                       style={[

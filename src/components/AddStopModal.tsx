@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   Modal,
-  FlatList,
   Alert,
   ScrollView,
   Animated,
   Dimensions,
   TouchableWithoutFeedback,
+  FlatList,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
@@ -460,36 +460,6 @@ export default function AddStopModal({
     }
   };
 
-  const renderSearchResult = ({ item }: { item: PlaceResult }) => (
-    <TouchableOpacity
-      style={styles.searchResult}
-      onPress={() => handlePlaceSelect(item)}
-    >
-      <View style={styles.placeIcon}>
-        <Ionicons name="location" size={20} color={theme.colors.primary} />
-      </View>
-      <View style={styles.placeInfo}>
-        <Text style={styles.placeName}>{item.name}</Text>
-        <Text style={styles.placeAddress} numberOfLines={2}>
-          {item.formatted_address}
-        </Text>
-        <View style={styles.placeMetaRow}>
-          {item.rating && (
-            <View style={styles.ratingContainer}>
-              <Ionicons name="star" size={14} color={theme.colors.warning} />
-              <Text style={styles.rating}>{item.rating}</Text>
-            </View>
-          )}
-          {item.types && item.types.length > 0 && (
-            <Text style={styles.placeType}>
-              {item.types[0].replace(/_/g, ' ')}
-            </Text>
-          )}
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-
   const renderCategory = ({ item }: { item: typeof categoryOptions[0] }) => (
     <TouchableOpacity
       style={[
@@ -588,6 +558,7 @@ export default function AddStopModal({
       maxHeight: 350,
       borderWidth: 1,
       borderColor: theme.colors.border,
+      overflow: 'hidden',
     },
     searchResult: {
       flexDirection: 'row',
@@ -973,14 +944,38 @@ export default function AddStopModal({
                   </View>
 
                   {searchResults.length > 0 && (
-                    <FlatList
-                      data={searchResults}
-                      renderItem={renderSearchResult}
-                      keyExtractor={(item) => item.place_id}
-                      style={styles.searchResults}
-                      keyboardShouldPersistTaps="handled"
-                      showsVerticalScrollIndicator={true}
-                    />
+                    <View style={styles.searchResults}>
+                      {searchResults.map((item) => (
+                        <TouchableOpacity
+                          key={item.place_id}
+                          style={styles.searchResult}
+                          onPress={() => handlePlaceSelect(item)}
+                        >
+                          <View style={styles.placeIcon}>
+                            <Ionicons name="location" size={20} color={theme.colors.primary} />
+                          </View>
+                          <View style={styles.placeInfo}>
+                            <Text style={styles.placeName}>{item.name}</Text>
+                            <Text style={styles.placeAddress} numberOfLines={2}>
+                              {item.formatted_address}
+                            </Text>
+                            <View style={styles.placeMetaRow}>
+                              {item.rating && (
+                                <View style={styles.ratingContainer}>
+                                  <Ionicons name="star" size={14} color={theme.colors.warning} />
+                                  <Text style={styles.rating}>{item.rating}</Text>
+                                </View>
+                              )}
+                              {item.types && item.types.length > 0 && (
+                                <Text style={styles.placeType}>
+                                  {item.types[0].replace(/_/g, ' ')}
+                                </Text>
+                              )}
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
                   )}
                 </View>
               )}

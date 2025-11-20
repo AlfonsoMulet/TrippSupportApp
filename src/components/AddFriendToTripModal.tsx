@@ -17,6 +17,7 @@ import { useThemeStore } from '../store/themeStore';
 import { useFriendStore } from '../store/friendStore';
 import { useAuthStore } from '../store/authStore';
 import { useTripStore } from '../store/tripStore';
+import { SharingService } from '../services/SharingService';
 
 interface AddFriendToTripModalProps {
   visible: boolean;
@@ -65,12 +66,47 @@ export default function AddFriendToTripModal({
 
     setLoading(true);
     try {
-      await updateTrip(tripId, {
-        sharedWith: selectedFriends,
-        isCollaborative: selectedFriends.length > 0,
-      });
-      Alert.alert('Success', 'Trip collaborators updated!');
-      onClose();
+      // Get the trip to check if it's already collaborative
+      const { trips } = useTripStore.getState();
+      const trip = trips.find(t => t.id === tripId);
+
+      if (trip?.isCollaborative) {
+        // For collaborative trips, use addMembers to properly add friends as members
+        const userEmails: { [userId: string]: string } = {};
+        const userDisplayNames: { [userId: string]: string } = {};
+
+        // Build user info from friends data
+        friends.forEach(friend => {
+          const friendData = friend.user1Data || friend.user2Data;
+          const friendId = friend.userId1 === user?.uid ? friend.userId2 : friend.userId1;
+          if (friendData && selectedFriends.includes(friendId)) {
+            userEmails[friendId] = friendData.email;
+            userDisplayNames[friendId] = friendData.displayName;
+          }
+        });
+
+        const success = await SharingService.addMembers(
+          tripId,
+          selectedFriends,
+          userEmails,
+          userDisplayNames
+        );
+
+        if (success) {
+          Alert.alert('Success', 'Friends invited to trip!');
+          onClose();
+        } else {
+          Alert.alert('Error', 'Failed to invite friends. Please try again.');
+        }
+      } else {
+        // For non-collaborative trips, use the old method
+        await updateTrip(tripId, {
+          sharedWith: selectedFriends,
+          isCollaborative: selectedFriends.length > 0,
+        });
+        Alert.alert('Success', 'Trip collaborators updated!');
+        onClose();
+      }
     } catch (error: any) {
       Alert.alert('Error', error.message || 'Failed to update trip');
     } finally {

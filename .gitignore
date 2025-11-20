@@ -74,3 +74,7 @@ android/build/
 
 # Remove backend directory from tracking
 backend/
+
+# Firebase
+.firebase/
+firebase-debug.log

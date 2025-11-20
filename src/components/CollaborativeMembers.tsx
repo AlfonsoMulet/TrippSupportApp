@@ -164,21 +164,19 @@ export default function CollaborativeMembers({
             {members.length} member{members.length !== 1 ? 's' : ''}
           </Text>
 
-          {isOwner && (
-            <TouchableOpacity
-              style={styles.manageButton}
-              onPress={() => setShowMembersModal(true)}
-            >
-              <Ionicons name="settings-outline" size={16} color={theme.colors.text} />
-              <Text style={styles.manageButtonText}>Manage</Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity
+            style={styles.manageButton}
+            onPress={() => setShowMembersModal(true)}
+          >
+            <Ionicons name={isOwner ? "settings-outline" : "people-outline"} size={16} color={theme.colors.text} />
+            <Text style={styles.manageButtonText}>{isOwner ? 'Manage' : 'Members'}</Text>
+          </TouchableOpacity>
         </View>
 
         <Text style={styles.description}>
           {isOwner
             ? 'Everyone can edit this trip. Changes sync in real-time.'
-            : 'This is a shared trip. Your changes are visible to all members.'}
+            : 'This is a shared trip. Your changes are visible to all members. You can invite friends!'}
         </Text>
       </View>
 

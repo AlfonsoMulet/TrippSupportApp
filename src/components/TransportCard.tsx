@@ -96,19 +96,18 @@ export default memo(function TransportCard({
       marginLeft: 33,
       marginVertical: 15,
       alignItems: 'center',
-      width: '100%',       // takes all available horizontal space
-      maxWidth: 600,       // optional: limits how wide it can get
-      paddingHorizontal: 16, 
+      alignSelf: 'stretch',
+      paddingHorizontal: 16,
     },
     transportCard: {
       width: '100%',
       maxWidth: 400,
       backgroundColor: theme?.colors?.card ?? '#fff',
       borderRadius: 12,
-      padding: 16,
+      padding: 12,
       borderWidth: 1,
       borderColor: theme?.colors?.border ?? '#e5e7eb',
-      minHeight: 100,
+      minHeight: 80,
       // Add visual feedback for tappability
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },

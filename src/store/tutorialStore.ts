@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuthStore } from './authStore';
 
 export interface TutorialStep {
   id: string;
@@ -171,6 +172,24 @@ const TUTORIAL_STEPS: TutorialStep[] = [
 
 const TUTORIAL_KEY = '@trip_planner_tutorial_completed';
 
+// List of email addresses that should see the tutorial (dev accounts)
+const DEV_ACCOUNTS = [
+  'alfonsomulet@gmail.com',
+  'dev@tripplanner.com',
+  'test@tripplanner.com',
+  // Add more dev account emails here
+];
+
+/**
+ * Check if the current user is a dev account
+ */
+const isDevAccount = (): boolean => {
+  const user = useAuthStore.getState().user;
+  if (!user || !user.email) return false;
+
+  return DEV_ACCOUNTS.includes(user.email.toLowerCase());
+};
+
 export const useTutorialStore = create<TutorialState>((set, get) => ({
   isActive: false,
   currentStep: 0,
@@ -179,11 +198,17 @@ export const useTutorialStore = create<TutorialState>((set, get) => ({
   
   checkTutorialStatus: async () => {
     try {
+      // Only show tutorial for dev accounts
+      if (!isDevAccount()) {
+        set({ hasCompletedTutorial: true, isActive: false });
+        return;
+      }
+
       const completed = await AsyncStorage.getItem(TUTORIAL_KEY);
       if (completed === 'true') {
         set({ hasCompletedTutorial: true, isActive: false });
       } else {
-        // Start tutorial automatically for new users
+        // Start tutorial automatically for new dev users
         set({ hasCompletedTutorial: false, isActive: true });
       }
     } catch (error) {
@@ -192,6 +217,11 @@ export const useTutorialStore = create<TutorialState>((set, get) => ({
   },
   
   startTutorial: () => {
+    // Only allow starting tutorial for dev accounts
+    if (!isDevAccount()) {
+      console.log('Tutorial is only available for dev accounts');
+      return;
+    }
     set({ isActive: true, currentStep: 0 });
   },
   

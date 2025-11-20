@@ -285,9 +285,11 @@ export default function FriendInviteModal({ visible, onClose }: FriendInviteModa
       fontSize: 24,
       color: theme.colors.text,
       fontFamily: 'monospace',
-      letterSpacing: 4,
       textAlign: 'center',
       marginBottom: 16,
+    },
+    inputWithText: {
+      letterSpacing: 4,
     },
     button: {
       backgroundColor: theme.colors.primary,
@@ -414,7 +416,7 @@ export default function FriendInviteModal({ visible, onClose }: FriendInviteModa
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Enter Friend Code</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, inviteCode.length > 0 && styles.inputWithText]}
                     placeholder="12345678"
                     placeholderTextColor={theme.colors.border}
                     value={inviteCode}

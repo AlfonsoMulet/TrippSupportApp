@@ -13,6 +13,7 @@ import { useThemeStore } from '../store/themeStore';
 import { useAuthStore } from '../store/authStore';
 import { useTripStore } from '../store/tripStore';
 import { useTranslation } from '../i18n/useTranslation';
+import AddFriendToTripModal from './AddFriendToTripModal';
 
 interface ManageMembersModalProps {
   visible: boolean;
@@ -23,6 +24,7 @@ interface ManageMembersModalProps {
 export default function ManageMembersModal({ visible, onClose, trip }: ManageMembersModalProps) {
   const [loading, setLoading] = useState(false);
   const [removingMember, setRemovingMember] = useState<string | null>(null);
+  const [showInviteModal, setShowInviteModal] = useState(false);
   const { theme } = useThemeStore();
   const { user } = useAuthStore();
   const { loadUserTrips } = useTripStore();
@@ -242,7 +244,9 @@ export default function ManageMembersModal({ visible, onClose, trip }: ManageMem
     actionButtonDanger: { borderColor: theme.colors.error },
     actionButtonText: { fontSize: 14, fontWeight: '500', color: theme.colors.text },
     actionButtonTextDanger: { color: theme.colors.error },
-    leaveButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.surface, paddingVertical: 12, borderRadius: 8, borderWidth: 1, borderColor: theme.colors.error, gap: 6, marginTop: 20 },
+    inviteButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, borderRadius: 8, gap: 6, marginTop: 20 },
+    inviteButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
+    leaveButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: theme.colors.surface, paddingVertical: 12, borderRadius: 8, borderWidth: 1, borderColor: theme.colors.error, gap: 6, marginTop: 12 },
     leaveButtonText: { color: theme.colors.error, fontSize: 16, fontWeight: '600' },
     emptyState: { alignItems: 'center', paddingVertical: 32 },
     emptyText: { fontSize: 14, color: theme.colors.textSecondary, marginTop: 8 },
@@ -324,20 +328,41 @@ export default function ManageMembersModal({ visible, onClose, trip }: ManageMem
                 );
               })
             )}
-            {!isOwner && (
-              <TouchableOpacity style={styles.leaveButton} onPress={handleLeaveTrip} disabled={loading}>
-                {loading ? <ActivityIndicator size="small" color={theme.colors.error} /> : (
-                  <>
-                    <Ionicons name="exit-outline" size={20} color={theme.colors.error} />
-                    <Text style={styles.leaveButtonText}>{t('manageMembers.leaveTrip')}</Text>
-                  </>
-                )}
-              </TouchableOpacity>
-            )}
+            {!isOwner ? (
+              <>
+                <TouchableOpacity
+                  style={[styles.inviteButton, { backgroundColor: theme.colors.primary }]}
+                  onPress={() => setShowInviteModal(true)}
+                  disabled={loading}
+                >
+                  <Ionicons name="person-add" size={20} color="#FFFFFF" />
+                  <Text style={styles.inviteButtonText}>{t('manageMembers.inviteFriends')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.leaveButton} onPress={handleLeaveTrip} disabled={loading}>
+                  {loading ? <ActivityIndicator size="small" color={theme.colors.error} /> : (
+                    <>
+                      <Ionicons name="exit-outline" size={20} color={theme.colors.error} />
+                      <Text style={styles.leaveButtonText}>{t('manageMembers.leaveTrip')}</Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+              </>
+            ) : null}
             </ScrollView>
           </Animated.View>
         </PanGestureHandler>
       </View>
+
+      {/* Invite Friends Modal */}
+      <AddFriendToTripModal
+        visible={showInviteModal}
+        onClose={() => {
+          setShowInviteModal(false);
+          loadUserTrips();
+        }}
+        tripId={trip.id}
+        currentSharedWith={trip.sharedWith || []}
+      />
     </Modal>
   );
 }

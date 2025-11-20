@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   StyleSheet,
   Alert,
@@ -11,6 +10,7 @@ import {
   InteractionManager,
   StatusBar,
   Animated,
+  FlatList,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -54,7 +54,7 @@ export default function TripDetailScreen() {
   const stopAnimatedPositions = useRef<{ [key: number]: Animated.Value }>({}).current;
 
   // Developer-only auto-scroll state
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<FlatList>(null);
   const autoScrollInterval = useRef<NodeJS.Timeout | null>(null);
   const currentScrollY = useRef(0);
   const autoScrollSpeed = useRef(0);
@@ -376,7 +376,7 @@ export default function TripDetailScreen() {
           const newScrollY = speed < 0
             ? Math.max(0, currentScrollY.current + speed)
             : currentScrollY.current + speed;
-          scrollViewRef.current?.scrollTo({ y: newScrollY, animated: false });
+          scrollViewRef.current?.scrollToOffset({ offset: newScrollY, animated: false });
           currentScrollY.current = newScrollY;
 
           // Update scroll compensation continuously during auto-scroll
@@ -954,7 +954,7 @@ export default function TripDetailScreen() {
         </View>
       </Animated.View>
 
-      <ScrollView
+      <FlatList
         ref={scrollViewRef}
         style={styles.content}
         showsVerticalScrollIndicator={false}
@@ -962,7 +962,9 @@ export default function TripDetailScreen() {
           currentScrollY.current = event.nativeEvent.contentOffset.y;
         }}
         scrollEventThrottle={16}
-      >
+        data={[{ key: 'content' }]}
+        renderItem={() => (
+          <View>
         {/* Trip Info Card */}
         {isInitialLoad ? (
           <View style={styles.skeletonCard}>
@@ -1198,7 +1200,10 @@ export default function TripDetailScreen() {
             </View>
           )}
         </View>
-      </ScrollView>
+          </View>
+        )}
+        keyExtractor={(item) => item.key}
+      />
         </Animated.View>
         </SafeAreaView>
       </Animated.View>

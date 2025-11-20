@@ -441,4 +441,66 @@ export class SharingService {
   static async leaveCollaborativeTrip(tripId: string, userId: string): Promise<boolean> {
     return await this.removeMember(tripId, userId);
   }
+
+  /**
+   * Add members to a collaborative trip
+   */
+  static async addMembers(
+    tripId: string,
+    userIds: string[],
+    userEmails: { [userId: string]: string },
+    userDisplayNames: { [userId: string]: string }
+  ): Promise<boolean> {
+    try {
+      const tripRef = doc(db, 'trips', tripId);
+      const tripDoc = await getDoc(tripRef);
+
+      if (!tripDoc.exists()) {
+        console.error('Trip not found');
+        return false;
+      }
+
+      const trip = { id: tripDoc.id, ...tripDoc.data() } as Trip;
+
+      // Get existing members
+      const existingMemberIds = trip.members?.map(m => m.userId) || [];
+      const existingSharedWith = trip.sharedWith || [];
+
+      // Filter out users who are already members
+      const newUserIds = userIds.filter(
+        id => !existingMemberIds.includes(id) && !existingSharedWith.includes(id)
+      );
+
+      if (newUserIds.length === 0) {
+        console.log('All selected users are already members');
+        return true;
+      }
+
+      // Create new member objects
+      const newMembers: TripMember[] = newUserIds.map(userId => ({
+        userId,
+        email: userEmails[userId] || '',
+        displayName: userDisplayNames[userId] || 'Unknown',
+        role: 'editor',
+        joinedAt: new Date().toISOString(),
+      }));
+
+      // Update trip with new members
+      const updatedMembers = [...(trip.members || []), ...newMembers];
+      const updatedSharedWith = [...existingSharedWith, ...newUserIds];
+
+      await updateDoc(tripRef, {
+        members: updatedMembers,
+        sharedWith: updatedSharedWith,
+        isCollaborative: true,
+        updatedAt: new Date().toISOString(),
+      });
+
+      console.log(`✅ Added ${newUserIds.length} new members to trip ${tripId}`);
+      return true;
+    } catch (error) {
+      console.error('Failed to add members:', error);
+      return false;
+    }
+  }
 }

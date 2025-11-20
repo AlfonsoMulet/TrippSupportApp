@@ -20,6 +20,7 @@ import { useAnimatedTheme } from '../contexts/ThemeAnimationContext';
 import { useTutorialStore } from '../store/tutorialStore';
 import { useSettingsStore } from '../store/settingsStore';
 import { useTranslation } from '../i18n/useTranslation';
+import { useAuthStore } from '../store/authStore';
 import type { TranslationKey } from '../i18n/useTranslation';
 import CreateTripModal from '../components/CreateTripModal';
 import TutorialOverlay from '../components/tutorial/TutorialOverlay';
@@ -32,19 +33,20 @@ type TripListScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 // Memoized trip card component for performance
-const TripCard = memo(({ 
-  trip, 
-  isCurrentTrip, 
-  onPress, 
+const TripCard = memo(({
+  trip,
+  isCurrentTrip,
+  onPress,
   onDelete,
   theme,
   formatDate,
   t,
   cardRef,
   index,
-}: { 
-  trip: Trip; 
-  isCurrentTrip: boolean; 
+  currentUserId,
+}: {
+  trip: Trip;
+  isCurrentTrip: boolean;
   onPress: () => void;
   onDelete: () => void;
   theme: any;
@@ -52,7 +54,11 @@ const TripCard = memo(({
   t: (key: TranslationKey, params?: Record<string, string | number>) => string;
   cardRef?: React.RefObject<View | null>;
   index: number;
+  currentUserId?: string;
 }) => {
+  const isOwner = currentUserId === trip.ownerId || currentUserId === trip.userId;
+  const isCollaborative = trip.isCollaborative && trip.members && trip.members.length > 1;
+  const showLeaveIcon = isOwner && isCollaborative;
   const formatDateRange = useCallback((startDate: string, endDate: string) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -212,7 +218,11 @@ const TripCard = memo(({
           }}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <Ionicons name="trash-outline" size={20} color={theme.colors.error} />
+          <Ionicons
+            name={showLeaveIcon ? "exit-outline" : "trash-outline"}
+            size={20}
+            color={theme.colors.error}
+          />
         </Pressable>
       </View>
 
@@ -357,31 +367,68 @@ export default function TripListScreen() {
     }
   }, [navigation, setCurrentTrip, tutorialActive, currentStep, steps, nextStep]);
 
-  const handleDeleteTrip = useCallback((trip: Trip) => {
-    Alert.alert(
-      t('tripList.deleteTrip'),
-      t('tripList.deleteTripConfirm', { name: trip.name }),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('common.delete'),
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await deleteTrip(trip.id);
-            } catch (error) {
-              console.error('❌ [TRIPS] Delete error:', error);
-              Alert.alert(t('common.error'), 'Failed to delete trip. Please try again.');
-            }
+  const handleDeleteTrip = useCallback(async (trip: Trip) => {
+    const { user } = useAuthStore.getState();
+    const isOwner = user?.uid === trip.ownerId || user?.uid === trip.userId;
+    const isCollaborative = trip.isCollaborative && trip.members && trip.members.length > 1;
+
+    // If owner of a collaborative trip with other members, show leave option
+    if (isOwner && isCollaborative) {
+      Alert.alert(
+        t('tripList.leaveTrip'),
+        t('tripList.leaveTripConfirm', { name: trip.name }),
+        [
+          { text: t('common.cancel'), style: 'cancel' },
+          {
+            text: t('tripList.leave'),
+            style: 'destructive',
+            onPress: async () => {
+              try {
+                if (!user) return;
+                // Use SharingService to leave the trip
+                const { SharingService } = await import('../services/SharingService');
+                const success = await SharingService.leaveCollaborativeTrip(trip.id, user.uid);
+                if (success) {
+                  await loadUserTrips();
+                } else {
+                  Alert.alert(t('common.error'), 'Failed to leave trip. Please try again.');
+                }
+              } catch (error) {
+                console.error('❌ [TRIPS] Leave error:', error);
+                Alert.alert(t('common.error'), 'Failed to leave trip. Please try again.');
+              }
+            },
           },
-        },
-      ]
-    );
-  }, [deleteTrip, t]);
+        ]
+      );
+    } else {
+      // Regular delete for non-collaborative trips or solo collaborative trips
+      Alert.alert(
+        t('tripList.deleteTrip'),
+        t('tripList.deleteTripConfirm', { name: trip.name }),
+        [
+          { text: t('common.cancel'), style: 'cancel' },
+          {
+            text: t('common.delete'),
+            style: 'destructive',
+            onPress: async () => {
+              try {
+                await deleteTrip(trip.id);
+              } catch (error) {
+                console.error('❌ [TRIPS] Delete error:', error);
+                Alert.alert(t('common.error'), 'Failed to delete trip. Please try again.');
+              }
+            },
+          },
+        ]
+      );
+    }
+  }, [deleteTrip, loadUserTrips, t]);
 
   const renderTripCard = useCallback(({ item: trip, index }: { item: Trip; index: number }) => {
+    const { user } = useAuthStore.getState();
     const isCurrentTrip = currentTrip?.id === trip.id;
-    
+
     // Create ref for this trip card if it doesn't exist
     if (!tripCardRefs.current[index]) {
       tripCardRefs.current[index] = React.createRef<View>();
@@ -398,6 +445,7 @@ export default function TripListScreen() {
         t={t}
         cardRef={tripCardRefs.current[index]}
         index={index}
+        currentUserId={user?.uid}
       />
     );
   }, [currentTrip, handleTripPress, handleDeleteTrip, theme, formatDate, t]);
