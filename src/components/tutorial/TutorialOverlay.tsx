@@ -105,7 +105,7 @@ export default function TutorialOverlay({ currentScreen, targetRefs }: TutorialO
     const nextStepData = steps[currentStep + 1];
     
     // Check if current step requires action
-    if (currentStepData.action && currentStepData.action !== 'none' && currentStepData.action !== 'auto-create-trip') {
+    if (currentStepData.action && currentStepData.action !== 'none') {
       // Don't advance if action is required
       return;
     }
@@ -115,13 +115,13 @@ export default function TutorialOverlay({ currentScreen, targetRefs }: TutorialO
       if (nextStepData.screen !== currentStepData.screen) {
         switch (nextStepData.screen) {
           case 'triplist':
-            navigation.navigate('MainTabs' as never, { screen: 'Trips' } as never);
+            (navigation as any).navigate('MainTabs', { screen: 'Trips' });
             break;
           case 'map':
-            navigation.navigate('MainTabs' as never, { screen: 'Map' } as never);
+            (navigation as any).navigate('MainTabs', { screen: 'Map' });
             break;
           case 'profile':
-            navigation.navigate('MainTabs' as never, { screen: 'Profile' } as never);
+            (navigation as any).navigate('MainTabs', { screen: 'Profile' });
             break;
         }
         // Delay step advancement to allow navigation
@@ -435,15 +435,12 @@ export default function TutorialOverlay({ currentScreen, targetRefs }: TutorialO
   const tooltipPosition = getTooltipPosition();
   
   // Show action hint for steps that require user interaction
-  const showActionHint = currentStepData.action && 
-    currentStepData.action !== 'none' && 
-    currentStepData.action !== 'auto-create-trip' &&
-    currentStepData.action !== 'navigate';
-  
+  const showActionHint = currentStepData.action &&
+    currentStepData.action !== 'none';
+
   // Disable Next button for action-required steps (except navigate-to-map which is informational)
-  const isNextDisabled = currentStepData.action && 
-    currentStepData.action !== 'none' && 
-    currentStepData.action !== 'auto-create-trip' &&
+  const isNextDisabled = currentStepData.action &&
+    currentStepData.action !== 'none' &&
     currentStepData.action !== 'navigate-to-map';
 
   return (
@@ -468,19 +465,18 @@ export default function TutorialOverlay({ currentScreen, targetRefs }: TutorialO
         pointerEvents="box-none"
       >
         <View style={styles.header} pointerEvents="box-none">
-          <Text style={styles.title}>{t(currentStepData.titleKey)}</Text>
+          <Text style={styles.title}>{t(currentStepData.titleKey as any)}</Text>
           <TouchableOpacity style={styles.skipButton} onPress={skipTutorial}>
             <Text style={styles.skipText}>{t('common.cancel')}</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.description}>{t(currentStepData.descriptionKey)}</Text>
+        <Text style={styles.description}>{t(currentStepData.descriptionKey as any)}</Text>
 
         {showActionHint && (
           <Text style={styles.actionHint}>
             {currentStepData.action === 'tap-trip' && t('tutorial.actionHints.tapTrip')}
             {currentStepData.action === 'wait-for-stop' && t('tutorial.actionHints.addStop')}
-            {currentStepData.action === 'delete-trip' && t('tutorial.actionHints.deleteTap')}
             {currentStepData.action === 'navigate-to-map' && t('tutorial.actionHints.tapMapTab')}
           </Text>
         )}
