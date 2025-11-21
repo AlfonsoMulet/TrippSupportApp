@@ -10,9 +10,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { Platform, View, Text, ActivityIndicator, Linking, Animated as RNAnimated, Easing } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
-// TEMPORARILY DISABLED FOR DEBUGGING
-// import Purchases from 'react-native-purchases';
-// import { REVENUECAT_CONFIG } from './src/config/revenuecat';
+import Purchases from 'react-native-purchases';
+import { REVENUECAT_CONFIG } from './src/config/revenuecat';
 
 import { useAuthStore } from './src/store/authStore';
 import { useThemeStore } from './src/store/themeStore';
@@ -195,23 +194,22 @@ export default function App() {
         console.error('Auth initialization error:', error);
       }
 
-      // TEMPORARILY DISABLED FOR DEBUGGING
       // Initialize RevenueCat (non-blocking)
-      // try {
-      //   console.log('🚀 [RevenueCat] Initializing...');
-      //   const apiKey = Platform.OS === 'ios'
-      //     ? REVENUECAT_CONFIG.IOS_API_KEY
-      //     : REVENUECAT_CONFIG.ANDROID_API_KEY;
-      //
-      //   if (apiKey && apiKey.length > 10) {
-      //     Purchases.configure({ apiKey });
-      //     console.log('✅ [RevenueCat] Initialized successfully');
-      //   } else {
-      //     console.warn('⚠️ [RevenueCat] Invalid API key, skipping initialization');
-      //   }
-      // } catch (rcError) {
-      //   console.warn('⚠️ [RevenueCat] Initialization failed (non-fatal):', rcError);
-      // }
+      try {
+        console.log('🚀 [RevenueCat] Initializing...');
+        const apiKey = Platform.OS === 'ios'
+          ? REVENUECAT_CONFIG.IOS_API_KEY
+          : REVENUECAT_CONFIG.ANDROID_API_KEY;
+
+        if (apiKey && apiKey.length > 10) {
+          Purchases.configure({ apiKey });
+          console.log('✅ [RevenueCat] Initialized successfully');
+        } else {
+          console.warn('⚠️ [RevenueCat] Invalid API key, skipping initialization');
+        }
+      } catch (rcError) {
+        console.warn('⚠️ [RevenueCat] Initialization failed (non-fatal):', rcError);
+      }
     };
 
     initialize();
@@ -244,15 +242,14 @@ export default function App() {
   useEffect(() => {
     const initSubscription = async () => {
       if (user) {
-        // TEMPORARILY DISABLED FOR DEBUGGING
         // Login user to RevenueCat with their Firebase UID
-        // try {
-        //   console.log('👤 [RevenueCat] Logging in user:', user.uid);
-        //   await Purchases.logIn(user.uid);
-        //   console.log('✅ [RevenueCat] User logged in');
-        // } catch (error) {
-        //   console.error('⚠️ [RevenueCat] Login failed:', error);
-        // }
+        try {
+          console.log('👤 [RevenueCat] Logging in user:', user.uid);
+          await Purchases.logIn(user.uid);
+          console.log('✅ [RevenueCat] User logged in');
+        } catch (error) {
+          console.error('⚠️ [RevenueCat] Login failed:', error);
+        }
 
         // Initialize subscription state
         await initializeSubscription();
