@@ -31,7 +31,8 @@
       "Bash(npm run firebase:login:*)",
       "Bash(cat:*)",
       "Bash(git restore:*)",
-      "Bash(npx expo install expo-dev-client)"
+      "Bash(npx expo install expo-dev-client)",
+      "Bash(npm cache clean:*)"
     ],
     "deny": [],
     "ask": []
