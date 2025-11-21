@@ -10,7 +10,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { Platform, View, Text, ActivityIndicator, Linking, Animated as RNAnimated, Easing } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
-import Purchases, { LOG_LEVEL } from 'react-native-purchases';
+import Purchases from 'react-native-purchases';
 import { REVENUECAT_CONFIG } from './src/config/revenuecat';
 
 import { useAuthStore } from './src/store/authStore';
@@ -187,31 +187,28 @@ export default function App() {
 
   useEffect(() => {
     const initialize = async () => {
+      // Initialize Auth first (critical)
       try {
-        // Initialize RevenueCat
-        console.log('🚀 [RevenueCat] Initializing...');
-        try {
-          const apiKey = Platform.OS === 'ios'
-            ? REVENUECAT_CONFIG.IOS_API_KEY
-            : REVENUECAT_CONFIG.ANDROID_API_KEY;
-
-          Purchases.configure({ apiKey });
-
-          // Enable debug logs in development
-          if (__DEV__) {
-            await Purchases.setLogLevel(LOG_LEVEL.DEBUG);
-          }
-
-          console.log('✅ [RevenueCat] Initialized successfully');
-        } catch (rcError) {
-          console.error('⚠️ [RevenueCat] Initialization failed:', rcError);
-          console.error('⚠️ Please update API keys in src/config/revenuecat.ts');
-        }
-
-        // Initialize Auth
         await initializeAuth();
       } catch (error) {
-        console.error('App initialization error:', error);
+        console.error('Auth initialization error:', error);
+      }
+
+      // Initialize RevenueCat (non-blocking)
+      try {
+        console.log('🚀 [RevenueCat] Initializing...');
+        const apiKey = Platform.OS === 'ios'
+          ? REVENUECAT_CONFIG.IOS_API_KEY
+          : REVENUECAT_CONFIG.ANDROID_API_KEY;
+
+        if (apiKey && apiKey.length > 10) {
+          Purchases.configure({ apiKey });
+          console.log('✅ [RevenueCat] Initialized successfully');
+        } else {
+          console.warn('⚠️ [RevenueCat] Invalid API key, skipping initialization');
+        }
+      } catch (rcError) {
+        console.warn('⚠️ [RevenueCat] Initialization failed (non-fatal):', rcError);
       }
     };
 
