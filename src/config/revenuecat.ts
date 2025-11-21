@@ -12,7 +12,7 @@
 // RevenueCat API Keys - Replace with your actual keys from https://app.revenuecat.com/
 export const REVENUECAT_CONFIG = {
   // Get these from RevenueCat Dashboard -> Project Settings -> API Keys
-  IOS_API_KEY: 'test_zATocryExmHCTxTDmcE5VmmMLto', // Your test/development API key
+  IOS_API_KEY: 'appl_EIGXBiWMCOPVrEuFJrDcPSwxJTB', // Your test/development API key
   ANDROID_API_KEY: 'test_zATocryExmHCTxTDmcE5VmmMLto', // Your test/development API key
 
   // Product identifiers - must match what you create in App Store Connect AND RevenueCat
