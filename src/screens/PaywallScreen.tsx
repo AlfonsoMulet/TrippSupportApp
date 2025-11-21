@@ -355,8 +355,8 @@ export default function PaywallScreen() {
                   ? 'Upgrade to Monthly plan'
                   : 'Upgrade to Yearly plan'
                 : selectedPlan === 'monthly'
-                  ? ' $4.99/month'
-                  : 'Go Yearly • $24.99/year'}
+                  ? `Start Monthly • ${subscriptionPlans.find(p => p.type === 'monthly')?.price}`
+                  : `Go Yearly • ${subscriptionPlans.find(p => p.type === 'yearly')?.price}`}
             </Text>
           )}
         </TouchableOpacity>

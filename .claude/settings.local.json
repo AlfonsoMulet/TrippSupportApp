@@ -28,7 +28,9 @@
       "Bash(git branch:*)",
       "Bash(git push:*)",
       "Bash(npm run deploy:support:*)",
-      "Bash(npm run firebase:login:*)"
+      "Bash(npm run firebase:login:*)",
+      "Bash(cat:*)",
+      "Bash(git restore:*)"
     ],
     "deny": [],
     "ask": []

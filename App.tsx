@@ -10,6 +10,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { Platform, View, Text, ActivityIndicator, Linking, Animated as RNAnimated, Easing } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
+import Purchases, { LOG_LEVEL } from 'react-native-purchases';
+import { REVENUECAT_CONFIG } from './src/config/revenuecat';
 
 import { useAuthStore } from './src/store/authStore';
 import { useThemeStore } from './src/store/themeStore';
@@ -186,6 +188,27 @@ export default function App() {
   useEffect(() => {
     const initialize = async () => {
       try {
+        // Initialize RevenueCat
+        console.log('🚀 [RevenueCat] Initializing...');
+        try {
+          const apiKey = Platform.OS === 'ios'
+            ? REVENUECAT_CONFIG.IOS_API_KEY
+            : REVENUECAT_CONFIG.ANDROID_API_KEY;
+
+          Purchases.configure({ apiKey });
+
+          // Enable debug logs in development
+          if (__DEV__) {
+            await Purchases.setLogLevel(LOG_LEVEL.DEBUG);
+          }
+
+          console.log('✅ [RevenueCat] Initialized successfully');
+        } catch (rcError) {
+          console.error('⚠️ [RevenueCat] Initialization failed:', rcError);
+          console.error('⚠️ Please update API keys in src/config/revenuecat.ts');
+        }
+
+        // Initialize Auth
         await initializeAuth();
       } catch (error) {
         console.error('App initialization error:', error);
@@ -193,7 +216,7 @@ export default function App() {
     };
 
     initialize();
-    
+
     if (Platform.OS === 'android') {
       NavigationBar.setVisibilityAsync('hidden');
       NavigationBar.setBehaviorAsync('overlay-swipe');
@@ -222,6 +245,16 @@ export default function App() {
   useEffect(() => {
     const initSubscription = async () => {
       if (user) {
+        // Login user to RevenueCat with their Firebase UID
+        try {
+          console.log('👤 [RevenueCat] Logging in user:', user.uid);
+          await Purchases.logIn(user.uid);
+          console.log('✅ [RevenueCat] User logged in');
+        } catch (error) {
+          console.error('⚠️ [RevenueCat] Login failed:', error);
+        }
+
+        // Initialize subscription state
         await initializeSubscription();
 
         // Check if this is first time user - start trial
