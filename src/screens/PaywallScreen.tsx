@@ -7,12 +7,16 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useThemeStore } from '../store/themeStore';
 import { useSubscriptionStore, SubscriptionType, subscriptionPlans } from '../store/subscriptionStore';
+
+const TERMS_OF_USE_URL = 'https://alfonsomulet.github.io/TrippSupportApp/terms-of-use.html';
+const PRIVACY_POLICY_URL = 'https://alfonsomulet.github.io/TrippSupportApp/privacy-policy.html';
 
 export default function PaywallScreen() {
   const navigation = useNavigation();
@@ -247,6 +251,21 @@ export default function PaywallScreen() {
       color: theme.colors.primary,
       textDecorationLine: 'underline',
     },
+    legalLinks: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 12,
+      gap: 8,
+    },
+    legalLinkText: {
+      fontSize: 12,
+      color: theme.colors.primary,
+    },
+    legalSeparator: {
+      fontSize: 12,
+      color: theme.colors.textSecondary,
+    },
   });
 
   return (
@@ -369,6 +388,15 @@ export default function PaywallScreen() {
               ? ''
               : 'Billed automatically. Cancel anytime in your account settings.'}
           </Text>
+          <View style={styles.legalLinks}>
+            <TouchableOpacity onPress={() => Linking.openURL(TERMS_OF_USE_URL)}>
+              <Text style={styles.legalLinkText}>Terms of Use</Text>
+            </TouchableOpacity>
+            <Text style={styles.legalSeparator}>|</Text>
+            <TouchableOpacity onPress={() => Linking.openURL(PRIVACY_POLICY_URL)}>
+              <Text style={styles.legalLinkText}>Privacy Policy</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

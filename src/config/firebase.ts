@@ -18,7 +18,7 @@ const firebaseConfig = {
 
 // Validate configuration
 if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
-  throw new Error('Firebase configuration is incomplete. Please check your .env file.');
+  console.error('Firebase configuration is incomplete. Please check your .env file.');
 }
 
 const app = initializeApp(firebaseConfig);

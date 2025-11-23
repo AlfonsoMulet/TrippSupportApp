@@ -31,6 +31,7 @@ import AboutScreen from './src/screens/AboutScreen';
 import HelpSupportScreen from './src/screens/HelpSupportScreen';
 import AcceptTripScreen from './src/screens/AcceptTripScreen';
 import PaywallScreen from './src/screens/PaywallScreen';
+import ErrorBoundary from './src/components/ErrorBoundary';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -332,10 +333,11 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <ThemeAnimationProvider>
-          <NavigationContainer ref={navigationRef} linking={linking}>
-            <Stack.Navigator 
+      <ErrorBoundary>
+        <SafeAreaProvider>
+          <ThemeAnimationProvider>
+            <NavigationContainer ref={navigationRef} linking={linking}>
+              <Stack.Navigator 
               screenOptions={{
                 headerShown: false,
                 animation: 'slide_from_right',
@@ -381,16 +383,17 @@ export default function App() {
                   <Stack.Screen name="AcceptTrip" component={AcceptTripScreen} />
                 </>
               )}
-            </Stack.Navigator>
-          </NavigationContainer>
-        </ThemeAnimationProvider>
-        <StatusBar 
-          style={theme.mode === 'dark' ? 'light' : 'dark'} 
-          translucent 
-          backgroundColor="transparent" 
-          animated
-        />
-      </SafeAreaProvider>
+              </Stack.Navigator>
+            </NavigationContainer>
+          </ThemeAnimationProvider>
+          <StatusBar
+            style={theme.mode === 'dark' ? 'light' : 'dark'}
+            translucent
+            backgroundColor="transparent"
+            animated
+          />
+        </SafeAreaProvider>
+      </ErrorBoundary>
     </GestureHandlerRootView>
   );
 }
