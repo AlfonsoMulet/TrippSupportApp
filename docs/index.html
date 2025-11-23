@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TripPlanner - Help Center</title>
+    <title>Tripp: Trip Planner - Help Center</title>
     <style>
         * {
             margin: 0;
@@ -50,7 +50,9 @@
         }
 
         .logo {
-            font-size: 80px;
+            width: 100px;
+            height: 100px;
+            border-radius: 24px;
             margin-bottom: 24px;
         }
 
@@ -92,8 +94,12 @@
         }
 
         .link-icon {
-            font-size: 48px;
+            font-size: 14px;
+            font-weight: 600;
             margin-bottom: 16px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .link-title {
@@ -118,7 +124,8 @@
 
         @media (max-width: 640px) {
             .logo {
-                font-size: 60px;
+                width: 80px;
+                height: 80px;
             }
 
             h1 {
@@ -133,33 +140,41 @@
 </head>
 <body>
     <div class="container">
-        <div class="logo">✈️</div>
-        <h1>TripPlanner Help Center</h1>
+        <img src="icon.png" alt="Tripp Logo" class="logo">
+        <h1>Tripp Help Center</h1>
         <p class="subtitle">Everything you need to get started</p>
 
         <div class="links">
             <a href="support.html" class="link-card">
-                <div class="link-icon">💬</div>
+                <div class="link-icon">Support</div>
                 <div class="link-title">Support & FAQ</div>
                 <div class="link-description">
-                    Get help with using TripPlanner and find answers to common questions
+                    Get help with using Tripp and find answers to common questions
                 </div>
             </a>
 
             <a href="privacy-policy.html" class="link-card">
-                <div class="link-icon">🔒</div>
+                <div class="link-icon">Privacy</div>
                 <div class="link-title">Privacy Policy</div>
                 <div class="link-description">
                     Learn how we protect and handle your data
                 </div>
             </a>
+
+            <a href="terms-of-use.html" class="link-card">
+                <div class="link-icon">Terms</div>
+                <div class="link-title">Terms of Use</div>
+                <div class="link-description">
+                    Read our terms and conditions
+                </div>
+            </a>
         </div>
 
         <footer>
-            <p><strong>TripPlanner</strong></p>
+            <p><strong>Tripp: Trip Planner</strong></p>
             <p style="margin-top: 8px; opacity: 0.7;">Version 1.0.0</p>
             <p style="margin-top: 12px; opacity: 0.6; font-size: 12px;">
-                © 2025 TripPlanner. All rights reserved.
+                2025 Tripp. All rights reserved.
             </p>
         </footer>
     </div>

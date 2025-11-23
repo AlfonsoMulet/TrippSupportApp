@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TripPlanner - Support</title>
+    <title>Tripp: Trip Planner - Support</title>
     <style>
         * {
             margin: 0;
@@ -53,7 +53,9 @@
         }
 
         .logo {
-            font-size: 48px;
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
             margin-bottom: 16px;
         }
 
@@ -84,7 +86,7 @@
         }
 
         .section-icon {
-            font-size: 28px;
+            display: none;
         }
 
         .faq-item {
@@ -138,8 +140,12 @@
         }
 
         .feature-icon {
-            font-size: 40px;
+            font-size: 14px;
+            font-weight: 600;
             margin-bottom: 12px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .feature-title {
@@ -233,15 +239,15 @@
 </head>
 <body>
     <header>
-        <div class="logo">✈️</div>
-        <h1>TripPlanner Support</h1>
+        <img src="icon.png" alt="Tripp Logo" class="logo">
+        <h1>Tripp Support</h1>
         <p class="subtitle">We're here to help you plan amazing trips</p>
     </header>
 
     <div class="container">
         <!-- Getting Started -->
         <section class="section">
-            <h2><span class="section-icon">🚀</span> Getting Started</h2>
+            <h2>Getting Started</h2>
             <div class="faq-item">
                 <div class="faq-question">How do I create my first trip?</div>
                 <div class="faq-answer">
@@ -271,25 +277,25 @@
 
         <!-- Features -->
         <section class="section">
-            <h2><span class="section-icon">✨</span> Key Features</h2>
+            <h2>Key Features</h2>
             <div class="feature-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🗺️</div>
+                    <div class="feature-icon">Map</div>
                     <div class="feature-title">Interactive Map</div>
                     <div class="feature-description">View all your stops on a beautiful map with routes between locations</div>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🚗</div>
+                    <div class="feature-icon">Transport</div>
                     <div class="feature-title">Transport Planning</div>
                     <div class="feature-description">Get distance and duration between stops with multiple transport modes</div>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">👥</div>
+                    <div class="feature-icon">Collaborate</div>
                     <div class="feature-title">Collaborative Trips</div>
                     <div class="feature-description">Share trips with friends and plan together in real-time</div>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">💰</div>
+                    <div class="feature-icon">Budget</div>
                     <div class="feature-title">Budget Tracking</div>
                     <div class="feature-description">Set budgets and track spending across your entire trip</div>
                 </div>
@@ -298,7 +304,7 @@
 
         <!-- Collaborative Features -->
         <section class="section">
-            <h2><span class="section-icon">👥</span> Collaboration & Sharing</h2>
+            <h2>Collaboration & Sharing</h2>
             <div class="faq-item">
                 <div class="faq-question">How do I add friends to the app?</div>
                 <div class="faq-answer">
@@ -316,7 +322,7 @@
                 <div class="faq-answer">
                     <ol>
                         <li>Open the trip you want to share</li>
-                        <li>Tap the <strong>people icon</strong> (👥) in the top right</li>
+                        <li>Tap the <strong>people icon</strong> in the top right</li>
                         <li>Select friends from your friends list</li>
                         <li>They'll receive access and can view/edit the trip together</li>
                     </ol>
@@ -333,7 +339,7 @@
 
         <!-- Trip Management -->
         <section class="section">
-            <h2><span class="section-icon">📋</span> Managing Your Trips</h2>
+            <h2>Managing Your Trips</h2>
             <div class="faq-item">
                 <div class="faq-question">How do I reorder stops in my trip?</div>
                 <div class="faq-answer">
@@ -362,7 +368,7 @@
 
         <!-- Settings & Customization -->
         <section class="section">
-            <h2><span class="section-icon">⚙️</span> Settings & Customization</h2>
+            <h2>Settings & Customization</h2>
             <div class="faq-item">
                 <div class="faq-question">How do I change the app theme?</div>
                 <div class="faq-answer">
@@ -392,7 +398,7 @@
 
         <!-- Troubleshooting -->
         <section class="section">
-            <h2><span class="section-icon">🔧</span> Troubleshooting</h2>
+            <h2>Troubleshooting</h2>
             <div class="faq-item">
                 <div class="faq-question">The app isn't loading my trips</div>
                 <div class="faq-answer">
@@ -448,11 +454,11 @@
 
         <!-- Privacy & Account -->
         <section class="section">
-            <h2><span class="section-icon">🔒</span> Privacy & Account</h2>
+            <h2>Privacy & Account</h2>
             <div class="faq-item">
                 <div class="faq-question">Is my data secure?</div>
                 <div class="faq-answer">
-                    Yes! TripPlanner uses Firebase Authentication and Firestore with security rules to protect your data. Your trips are private by default and only accessible to you and people you explicitly share with.
+                    Yes! Tripp uses Firebase Authentication and Firestore with security rules to protect your data. Your trips are private by default and only accessible to you and people you explicitly share with.
                 </div>
             </div>
 
@@ -473,12 +479,12 @@
         <!-- Contact Support -->
         <section class="section">
             <div class="contact-card">
-                <h2><span class="section-icon">💬</span> Still Need Help?</h2>
+                <h2>Still Need Help?</h2>
                 <p style="margin-top: 16px; opacity: 0.9;">
                     Can't find what you're looking for? Our support team is here to help!
                 </p>
-                <a href="mailto:support@tripplanner.app" class="contact-email">
-                    📧 support@tripplanner.app
+                <a href="mailto:trippplannerapp.help@gmail.com" class="contact-email">
+                    trippplannerapp.help@gmail.com
                 </a>
                 <p style="margin-top: 24px; font-size: 14px; opacity: 0.8;">
                     We typically respond within 24-48 hours
@@ -488,13 +494,13 @@
     </div>
 
     <footer class="version-info">
-        <p><strong>TripPlanner</strong></p>
+        <p><strong>Tripp: Trip Planner</strong></p>
         <p>Version 1.0.0</p>
         <p style="margin-top: 12px; opacity: 0.7;">
-            Made with ❤️ for travelers worldwide
+            Made for travelers worldwide
         </p>
         <p style="margin-top: 8px; font-size: 12px; opacity: 0.6;">
-            © 2025 TripPlanner. All rights reserved.
+            2025 Tripp. All rights reserved.
         </p>
     </footer>
 </body>
