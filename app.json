@@ -7,22 +7,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "statusBar": {
-      "hidden": false,
-      "style": "auto",
-      "backgroundColor": "transparent",
-      "translucent": true
-    },
-    "androidStatusBar": {
-      "barStyle": "light-content",
-      "backgroundColor": "transparent",
-      "translucent": true
-    },
-    "androidNavigationBar": {
-      "visible": "immersive",
-      "barStyle": "light-content",
-      "backgroundColor": "transparent"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -30,8 +14,6 @@
       "bundleIdentifier": "com.alfonsomulet.tripplanner",
       "buildNumber": "1",
       "supportsTablet": false,
-      "statusBarHidden": false,
-      "statusBarStyle": "auto",
       "config": {
         "googleMapsApiKey": "AIzaSyDgpPXqecqrcuikozBRy4AYwFGpN1a32w0"
       },
@@ -58,16 +40,6 @@
         "googleMaps": {
           "apiKey": "AIzaSyDgpPXqecqrcuikozBRy4AYwFGpN1a32w0"
         }
-      },
-      "navigationBar": {
-        "visible": "immersive",
-        "barStyle": "light-content",
-        "backgroundColor": "transparent"
-      },
-      "statusBar": {
-        "barStyle": "light-content",
-        "backgroundColor": "transparent",
-        "translucent": true
       }
     },
     "web": {
