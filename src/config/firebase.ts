@@ -18,7 +18,21 @@ const firebaseConfig = {
 
 // Validate configuration
 if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
-  console.error('Firebase configuration is incomplete. Please check your .env file.');
+  const errorMessage = 'Firebase configuration is incomplete. Please check your environment variables.';
+  console.error('❌ [Firebase Error]', errorMessage);
+  console.error('Current config:', {
+    apiKey: firebaseConfig.apiKey ? 'SET' : 'MISSING',
+    authDomain: firebaseConfig.authDomain ? 'SET' : 'MISSING',
+    projectId: firebaseConfig.projectId ? 'SET' : 'MISSING',
+    storageBucket: firebaseConfig.storageBucket ? 'SET' : 'MISSING',
+    messagingSenderId: firebaseConfig.messagingSenderId ? 'SET' : 'MISSING',
+    appId: firebaseConfig.appId ? 'SET' : 'MISSING',
+  });
+  console.error('Environment variables check:', {
+    EXPO_PUBLIC_FIREBASE_API_KEY: process.env.EXPO_PUBLIC_FIREBASE_API_KEY ? 'SET' : 'MISSING',
+    EXPO_PUBLIC_FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID ? 'SET' : 'MISSING',
+  });
+  throw new Error(errorMessage);
 }
 
 const app = initializeApp(firebaseConfig);

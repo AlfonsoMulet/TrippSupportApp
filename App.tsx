@@ -185,31 +185,52 @@ export default function App() {
   const navigationRef = React.useRef<any>(null);
   const isLoadingComplete = useCachedResources();
   const [showPaywallLock, setShowPaywallLock] = React.useState(false);
+  const [initError, setInitError] = React.useState<string | null>(null);
+  const [forceReady, setForceReady] = React.useState(false);
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
     const initialize = async () => {
-      // Initialize Auth first (critical)
-      try {
-        await initializeAuth();
-      } catch (error) {
-        console.error('Auth initialization error:', error);
-      }
+      // Safety timeout - force app to show after 10 seconds even if initialization hangs
+      timeoutId = setTimeout(() => {
+        console.warn('⏱️ [App] Initialization timeout - forcing app to show');
+        setForceReady(true);
+      }, 10000);
 
-      // Initialize RevenueCat (non-blocking)
       try {
-        console.log('🚀 [RevenueCat] Initializing...');
-        const apiKey = Platform.OS === 'ios'
-          ? REVENUECAT_CONFIG.IOS_API_KEY
-          : REVENUECAT_CONFIG.ANDROID_API_KEY;
+        console.log('🚀 [App] Starting initialization...');
 
-        if (apiKey && apiKey.length > 10) {
-          Purchases.configure({ apiKey });
-          console.log('✅ [RevenueCat] Initialized successfully');
-        } else {
-          console.warn('⚠️ [RevenueCat] Invalid API key, skipping initialization');
+        // Initialize Auth first (critical)
+        try {
+          await initializeAuth();
+          console.log('✅ [App] Auth initialized');
+        } catch (error) {
+          console.error('❌ [App] Auth initialization error:', error);
+          setInitError(`Auth failed: ${error}`);
         }
-      } catch (rcError) {
-        console.warn('⚠️ [RevenueCat] Initialization failed (non-fatal):', rcError);
+
+        // Initialize RevenueCat (non-blocking)
+        try {
+          console.log('🚀 [RevenueCat] Initializing...');
+          const apiKey = Platform.OS === 'ios'
+            ? REVENUECAT_CONFIG.IOS_API_KEY
+            : REVENUECAT_CONFIG.ANDROID_API_KEY;
+
+          if (apiKey && apiKey.length > 10) {
+            Purchases.configure({ apiKey });
+            console.log('✅ [RevenueCat] Initialized successfully');
+          } else {
+            console.warn('⚠️ [RevenueCat] Invalid API key, skipping initialization');
+          }
+        } catch (rcError) {
+          console.warn('⚠️ [RevenueCat] Initialization failed (non-fatal):', rcError);
+        }
+
+        console.log('✅ [App] Initialization complete');
+      } catch (error) {
+        console.error('❌ [App] Critical initialization error:', error);
+        setInitError(`Critical error: ${error}`);
       }
     };
 
@@ -224,7 +245,7 @@ export default function App() {
     const handleDeepLink = (event: { url: string }) => {
       const { url } = event;
       const match = url.match(/tripplanner:\/\/share\/(.+)/);
-      
+
       if (match && match[1] && navigationRef.current) {
         navigationRef.current.navigate('AcceptTrip', { token: match[1] });
       }
@@ -236,7 +257,10 @@ export default function App() {
       if (url) handleDeepLink({ url });
     });
 
-    return () => subscription.remove();
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      subscription.remove();
+    };
   }, []);
 
   // Initialize subscription when user logs in
@@ -279,20 +303,69 @@ export default function App() {
     }
   }, [user, subscriptionLoading, isTrialActive, hasActiveSubscription]);
   
-  if (loading || !isLoadingComplete) {
+  // Show error screen if initialization failed
+  if (initError && !forceReady) {
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
-          <View style={{ 
-            flex: 1, 
-            justifyContent: 'center', 
-            alignItems: 'center', 
+          <View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#ffffff',
+            paddingHorizontal: 32,
+          }}>
+            <Text style={{
+              fontSize: 24,
+              color: '#ff3b30',
+              textAlign: 'center',
+              fontWeight: '700',
+              marginBottom: 16,
+            }}>
+              Initialization Error
+            </Text>
+            <Text style={{
+              fontSize: 16,
+              color: '#666666',
+              textAlign: 'center',
+              marginBottom: 32,
+            }}>
+              {initError}
+            </Text>
+            <Text style={{
+              fontSize: 14,
+              color: '#999999',
+              textAlign: 'center',
+            }}>
+              Please contact support or try again later
+            </Text>
+          </View>
+          <StatusBar
+            style="dark"
+            translucent
+            backgroundColor="transparent"
+            animated
+          />
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    );
+  }
+
+  // Show loading screen only if not forced and still loading
+  if ((loading || !isLoadingComplete) && !forceReady) {
+    return (
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
             backgroundColor: theme.colors.background
           }}>
             <ActivityIndicator size="large" color={theme.colors.primary} />
-            <Text style={{ 
-              fontSize: 18, 
-              color: theme.colors.text, 
+            <Text style={{
+              fontSize: 18,
+              color: theme.colors.text,
               textAlign: 'center',
               fontWeight: '600',
               marginTop: 16
@@ -300,10 +373,10 @@ export default function App() {
               Loading...
             </Text>
           </View>
-          <StatusBar 
-            style={theme.mode === 'dark' ? 'light' : 'dark'} 
-            translucent 
-            backgroundColor="transparent" 
+          <StatusBar
+            style={theme.mode === 'dark' ? 'light' : 'dark'}
+            translucent
+            backgroundColor="transparent"
             animated
           />
         </SafeAreaProvider>

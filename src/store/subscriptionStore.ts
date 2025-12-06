@@ -107,6 +107,7 @@ interface SubscriptionState {
   checkSubscriptionStatus: () => Promise<boolean>;
   resetSubscription: () => Promise<void>;
   fetchOfferings: () => Promise<void>;
+  grantTestAccess: () => void;
 }
 
 const TRIAL_DURATION_DAYS = 7;
@@ -456,5 +457,23 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
       console.error('❌ [RevenueCat] Failed to fetch offerings:', error);
       set({ availablePackages: [] });
     }
+  },
+
+  grantTestAccess: () => {
+    console.log('🧪 [Test Access] Granting test access to authorized account');
+
+    // Grant 365 days of trial access for testing
+    const now = new Date().toISOString();
+    const endDate = addDays(new Date(), 365).toISOString();
+
+    set({
+      isTrialActive: true,
+      trialStartDate: now,
+      trialEndDate: endDate,
+      daysRemainingInTrial: 365,
+      hasActiveSubscription: false,
+    });
+
+    console.log('✅ [Test Access] Test access granted - 365 days trial');
   },
 }));

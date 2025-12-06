@@ -14,19 +14,28 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useThemeStore } from '../store/themeStore';
 import { useSubscriptionStore, SubscriptionType, subscriptionPlans } from '../store/subscriptionStore';
+import { useAuthStore } from '../store/authStore';
 
 const TERMS_OF_USE_URL = 'https://alfonsomulet.github.io/TrippSupportApp/terms-of-use.html';
 const PRIVACY_POLICY_URL = 'https://alfonsomulet.github.io/TrippSupportApp/privacy-policy.html';
 
+// Test accounts that can bypass paywall during testing
+const TEST_ACCOUNTS = [
+  'alfonsomuletvazquez@gmail.com',
+  'appleteam@gmail.com',
+];
+
 export default function PaywallScreen() {
   const navigation = useNavigation();
   const { theme } = useThemeStore();
+  const { user } = useAuthStore();
   const {
     purchaseSubscription,
     restorePurchases,
     daysRemainingInTrial,
     isTrialActive,
     hasActiveSubscription,
+    grantTestAccess,
   } = useSubscriptionStore();
 
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionType>('yearly');
@@ -34,6 +43,9 @@ export default function PaywallScreen() {
 
   // Check if this is a locked paywall (trial expired, no subscription)
   const isLocked = !isTrialActive && !hasActiveSubscription;
+
+  // Check if user is a test account
+  const isTestAccount = user?.email ? TEST_ACCOUNTS.includes(user.email.toLowerCase()) : false;
 
   const features = [
     { icon: 'map-outline', text: 'Unlimited trips and destinations' },
@@ -71,6 +83,30 @@ export default function PaywallScreen() {
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  const handleSkipForTesting = () => {
+    Alert.alert(
+      'Skip for Testing',
+      'This will grant you temporary access to test the app. This feature is only available for authorized test accounts.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Grant Access',
+          onPress: () => {
+            grantTestAccess();
+            Alert.alert(
+              'Access Granted',
+              'You now have full access to test the app.',
+              [{ text: 'Continue', onPress: () => navigation.goBack() }]
+            );
+          },
+        },
+      ]
+    );
   };
 
   const styles = StyleSheet.create({
@@ -237,6 +273,20 @@ export default function PaywallScreen() {
       fontSize: 16,
       fontWeight: '500',
     },
+    testButton: {
+      paddingVertical: 12,
+      alignItems: 'center',
+      backgroundColor: theme.colors.card,
+      borderRadius: 8,
+      marginTop: 8,
+      borderWidth: 1,
+      borderColor: theme.colors.primary + '40',
+    },
+    testButtonText: {
+      color: theme.colors.primary,
+      fontSize: 14,
+      fontWeight: '600',
+    },
     footer: {
       alignItems: 'center',
       marginTop: 24,
@@ -380,7 +430,22 @@ export default function PaywallScreen() {
           )}
         </TouchableOpacity>
 
-        
+        <TouchableOpacity
+          style={styles.restoreButton}
+          onPress={handleRestore}
+          disabled={isProcessing}
+        >
+          <Text style={styles.restoreButtonText}>Restore Purchases</Text>
+        </TouchableOpacity>
+
+        {isTestAccount && (
+          <TouchableOpacity
+            style={styles.testButton}
+            onPress={handleSkipForTesting}
+          >
+            <Text style={styles.testButtonText}>Skip for Testing</Text>
+          </TouchableOpacity>
+        )}
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>

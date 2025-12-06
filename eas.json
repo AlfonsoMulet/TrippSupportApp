@@ -6,13 +6,40 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyDAgIUN9gju62_coYRLFRNSAGjYafN1D7U",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "trip-planner-app-a09e5.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "trip-planner-app-a09e5",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "trip-planner-app-a09e5.firebasestorage.app",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "634372912229",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:634372912229:web:b2c03f273ded2840cf828c",
+        "EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID": "G-F2QMXLLEWT"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyDAgIUN9gju62_coYRLFRNSAGjYafN1D7U",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "trip-planner-app-a09e5.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "trip-planner-app-a09e5",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "trip-planner-app-a09e5.firebasestorage.app",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "634372912229",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:634372912229:web:b2c03f273ded2840cf828c",
+        "EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID": "G-F2QMXLLEWT"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyDAgIUN9gju62_coYRLFRNSAGjYafN1D7U",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "trip-planner-app-a09e5.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "trip-planner-app-a09e5",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "trip-planner-app-a09e5.firebasestorage.app",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "634372912229",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:634372912229:web:b2c03f273ded2840cf828c",
+        "EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID": "G-F2QMXLLEWT"
+      }
     }
   },
   "submit": {
