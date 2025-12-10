@@ -12,7 +12,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.alfonsomulet.tripplanner",
-      "buildNumber": "28",
+      "buildNumber": "31",
       "supportsTablet": false,
       "config": {
         "googleMapsApiKey": "AIzaSyDgpPXqecqrcuikozBRy4AYwFGpN1a32w0"

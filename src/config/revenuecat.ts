@@ -11,9 +11,11 @@
 
 // RevenueCat API Keys - Replace with your actual keys from https://app.revenuecat.com/
 export const REVENUECAT_CONFIG = {
-  // Get these from RevenueCat Dashboard -> Project Settings -> API Keys
-  IOS_API_KEY: 'appl_EIGXBiWMCOPVrEuFJrDcPSwxJTB', // Your test/development API key
-  ANDROID_API_KEY: 'test_zATocryExmHCTxTDmcE5VmmMLto', // Your test/development API key
+  // IMPORTANT: Get PRODUCTION keys from RevenueCat Dashboard -> Project Settings -> API Keys
+  // For production builds, use the "Production" keys, NOT "Public SDK" or test keys
+  // Test keys (starting with "test_") will NOT work with real App Store purchases
+  IOS_API_KEY: 'appl_EIGXBiWMCOPVrEuFJrDcPSwxJTB', // VERIFY: This should be your iOS PRODUCTION key
+  ANDROID_API_KEY: 'test_zATocryExmHCTxTDmcE5VmmMLto', // ⚠️ WARNING: This is a TEST key - replace with production key!
 
   // Product identifiers - must match what you create in App Store Connect AND RevenueCat
   MONTHLY_PRODUCT_ID: 'com.alfonsomulet.tripplanner.pro.monthly',
