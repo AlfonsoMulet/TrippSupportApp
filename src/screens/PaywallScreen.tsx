@@ -28,7 +28,7 @@ const TEST_ACCOUNTS = [
 export default function PaywallScreen() {
   const navigation = useNavigation();
   const { theme } = useThemeStore();
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const {
     purchaseSubscription,
     restorePurchases,
@@ -66,8 +66,10 @@ export default function PaywallScreen() {
         'Your subscription is now active. Enjoy all premium features!',
         [{ text: 'Start Planning', onPress: () => navigation.goBack() }]
       );
-    } catch (error) {
-      Alert.alert('Purchase Failed', 'Something went wrong. Please try again.');
+    } catch (error: any) {
+      console.error('Purchase error details:', error);
+      const errorMessage = error?.message || error?.toString() || 'Something went wrong. Please try again.';
+      Alert.alert('Purchase Failed', errorMessage);
     } finally {
       setIsProcessing(false);
     }
@@ -107,6 +109,16 @@ export default function PaywallScreen() {
         },
       ]
     );
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Firebase auth state change will automatically navigate to login screen
+    } catch (error) {
+      console.error('Logout error:', error);
+      Alert.alert('Error', 'Failed to log out. Please try again.');
+    }
   };
 
   const styles = StyleSheet.create({
@@ -267,6 +279,10 @@ export default function PaywallScreen() {
     restoreButton: {
       paddingVertical: 12,
       alignItems: 'center',
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: theme.colors.border || '#E5E5E5',
+      backgroundColor: theme.colors.card,
     },
     restoreButtonText: {
       color: theme.colors.primary,
@@ -277,15 +293,29 @@ export default function PaywallScreen() {
       paddingVertical: 12,
       alignItems: 'center',
       backgroundColor: theme.colors.card,
-      borderRadius: 8,
+      borderRadius: 12,
       marginTop: 8,
       borderWidth: 1,
-      borderColor: theme.colors.primary + '40',
+      borderColor: theme.colors.border || '#E5E5E5',
     },
     testButtonText: {
       color: theme.colors.primary,
       fontSize: 14,
       fontWeight: '600',
+    },
+    logoutButton: {
+      paddingVertical: 12,
+      alignItems: 'center',
+      marginTop: 16,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: theme.colors.border || '#E5E5E5',
+      backgroundColor: theme.colors.card,
+    },
+    logoutButtonText: {
+      color: theme.colors.textSecondary,
+      fontSize: 16,
+      fontWeight: '500',
     },
     footer: {
       alignItems: 'center',
@@ -437,6 +467,16 @@ export default function PaywallScreen() {
         >
           <Text style={styles.restoreButtonText}>Restore Purchases</Text>
         </TouchableOpacity>
+
+        {isLocked && (
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={handleLogout}
+            disabled={isProcessing}
+          >
+            <Text style={styles.logoutButtonText}>Go Back to Login</Text>
+          </TouchableOpacity>
+        )}
 
         {isTestAccount && (
           <TouchableOpacity

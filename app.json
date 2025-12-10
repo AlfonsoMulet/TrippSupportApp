@@ -1,9 +1,9 @@
 {
   "expo": {
-    "sdkVersion":"54.0.0",
+    "sdkVersion": "54.0.0",
     "name": "Trip Planner",
     "slug": "trip-planner-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -12,7 +12,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.alfonsomulet.tripplanner",
-      "buildNumber": "1",
+      "buildNumber": "28",
       "supportsTablet": false,
       "config": {
         "googleMapsApiKey": "AIzaSyDgpPXqecqrcuikozBRy4AYwFGpN1a32w0"
@@ -48,7 +48,8 @@
     "plugins": [
       "expo-asset",
       "expo-font",
-      "expo-location"
+      "expo-location",
+      "expo-web-browser"
     ],
     "updates": {
       "enabled": false,

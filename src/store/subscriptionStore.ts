@@ -110,7 +110,7 @@ interface SubscriptionState {
   grantTestAccess: () => void;
 }
 
-const TRIAL_DURATION_DAYS = 7;
+const TRIAL_DURATION_DAYS = 14;
 const STORAGE_KEYS = {
   TRIAL_START: '@subscription_trial_start',
   SUBSCRIPTION_TYPE: '@subscription_type',
@@ -335,7 +335,7 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
       await AsyncStorage.removeItem(STORAGE_KEYS.SUBSCRIPTION_TYPE);
       await AsyncStorage.removeItem(STORAGE_KEYS.SUBSCRIPTION_END);
 
-      // Start a new 7-day trial when subscription is cancelled
+      // Start a new 14-day trial when subscription is cancelled
       const now = new Date().toISOString();
       const endDate = addDays(new Date(), TRIAL_DURATION_DAYS).toISOString();
 
@@ -351,7 +351,7 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
         daysRemainingInTrial: TRIAL_DURATION_DAYS,
       });
 
-      console.log('✅ [Subscription] Cancelled - Started new 7-day trial');
+      console.log('✅ [Subscription] Cancelled - Started new 14-day trial');
     } catch (error) {
       console.error('Failed to cancel subscription:', error);
     }
@@ -462,18 +462,18 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
   grantTestAccess: () => {
     console.log('🧪 [Test Access] Granting test access to authorized account');
 
-    // Grant 365 days of trial access for testing
+    // Grant 14 days of trial access for testing
     const now = new Date().toISOString();
-    const endDate = addDays(new Date(), 365).toISOString();
+    const endDate = addDays(new Date(), TRIAL_DURATION_DAYS).toISOString();
 
     set({
       isTrialActive: true,
       trialStartDate: now,
       trialEndDate: endDate,
-      daysRemainingInTrial: 365,
+      daysRemainingInTrial: TRIAL_DURATION_DAYS,
       hasActiveSubscription: false,
     });
 
-    console.log('✅ [Test Access] Test access granted - 365 days trial');
+    console.log(`✅ [Test Access] Test access granted - ${TRIAL_DURATION_DAYS} days trial`);
   },
 }));
